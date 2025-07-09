@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react"
 import starWarsReducer, { initialStarWarsState } from "../starWarsStore"
-
+import { getAllPeople, getAllPlanets, getAllVehicles } from "../api/StarWarsApi"
 const StarWarsContext = createContext(null)
 const STORAGE_KEY = "starWarsData"
 
@@ -29,13 +29,13 @@ export function StarWarsProvider({ children }) {
     async function loadAll() {
       console.log("Cargando datos desde la API...");
       const [charsRes, planetsRes, vehiclesRes] = await Promise.all([
-        fetch("https://swapi.tech/api/people/").then(r => r.json()).then(j => j.results),
-        fetch("https://swapi.tech/api/planets/").then(r => r.json()).then(j => j.results),
-        fetch("https://swapi.tech/api/vehicles/").then(r => r.json()).then(j => j.results)
+        getAllPeople(),
+        getAllPlanets(),
+        getAllVehicles()
       ])
 
       const chars = await Promise.all(
-        charsRes.map(async char => {
+        charsRes.results.map(async char => {
           const details = await fetch(char.url).then(r => r.json())
           return { ...details.result.properties, id: details.result._id }
         })

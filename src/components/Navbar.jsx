@@ -2,17 +2,23 @@ import { Link } from "react-router-dom";
 import starwars50 from "../assets/img/starwars50.svg";
 import { useStarWarsStore } from "../hooks/useStarWarsStore.jsx";
 import { useNavigate } from "react-router-dom";
+import Search from "./Search.jsx";
 export const Navbar = () => {
 
-    const { state: { favorites }, dispatch } = useStarWarsStore();
+	const { state: { favorites }, dispatch } = useStarWarsStore();
 	const navigate = useNavigate();
 
 	return (
 		<nav className="navbar navbar-light bg-light">
-			<div className="container">
+			<div className="container-fluid m-0 d-flex align-items-center justify-content-evenly">
 				<button className="btn" onClick={() => navigate("/")}>
 					<img src={starwars50} style={{ width: "75px" }}></img>
 				</button>
+
+				<div className="mx-1 w-50" style={{ minWidth: 200 }}>
+					<Search />
+				</div>
+
 				<div className="ml-auto">
 					<div className="dropdown">
 						<a className="btn btn-primary px-3 py-2 dropdown-toggle fs-5" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
