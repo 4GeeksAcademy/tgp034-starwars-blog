@@ -13,7 +13,6 @@ export const Navbar = () => {
 				<button className="btn" onClick={() => navigate("/")}>
 					<img src={starwars50} style={{ width: "75px" }}></img>
 				</button>
-
 				<div className="mx-1 w-50" style={{ minWidth: 200 }}>
 					<Search />
 				</div>

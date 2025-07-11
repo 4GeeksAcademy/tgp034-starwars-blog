@@ -31,15 +31,23 @@ export const Details = () => {
     resourceType = "planet";
   } else if ("passengers" in item) {
     resourceType = "vehicle";
-  } else {
-    resourceType = "unknown";
   }
+  
+  let imgType;
+  if(resourceType === "character") {
+    imgType = "characters";
+  } else if(resourceType === "planet") {
+    imgType = "planets";
+  } else if(resourceType === "vehicle") {
+    imgType = "vehicles";
+  } 
+  const imgUrl = "https://raw.githubusercontent.com/breatheco-de/swapi-images/refs/heads/master/public/images/" + imgType + "/" + item.uid + ".jpg";
 
   return (
     <div className="container-fluid p-5">
       <div className="d-flex align-items-center gap-3">
         <div className="container w-50 justify-content-center d-flex">
-          <img className="w-100" style={{ maxWidth: "500px" }} src="https://marvel-b1-cdn.bc0a.com/f00000000279829/uwf.edu/media/university-of-west-florida/offices/university-marketing-and-communications/webservices/miscimages/800x600.png" alt="" />
+          <img className="w-100" style={{ maxWidth: "500px" }} src={imgUrl} alt="" />
         </div>
         <div className="text-center w-50 d-flex flex-column align-items-center justify-content-center p-3">
           <div className="d-flex w-100 justify-content-evenly align-items-center">

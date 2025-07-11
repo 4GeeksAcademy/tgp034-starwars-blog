@@ -17,7 +17,8 @@ export async function getAllPeople() {
   const details = await Promise.all(
     people.results.map(async person => {
       const detail = await fetch(person.url).then(r => r.json());
-      return { ...detail.result.properties, id: detail.result._id };
+      const uid = person.uid;
+      return {uid, ...detail.result.properties, id: detail.result._id };
     })
   );
   return details;
@@ -36,7 +37,8 @@ export async function getAllPlanets() {
   const details = await Promise.all(
     planets.results.map(async planet => {
       const detail = await fetch(planet.url).then(r => r.json());
-      return { ...detail.result.properties, id: detail.result._id };
+      const uid = planet.uid
+      return { uid, ...detail.result.properties, id: detail.result._id };
     })
   );
   return details;
@@ -55,7 +57,8 @@ export async function getAllVehicles() {
   const details = await Promise.all(
     vehicles.results.map(async vehicle => {
       const detail = await fetch(vehicle.url).then(r => r.json());
-      return { ...detail.result.properties, id: detail.result._id };
+      const uid = vehicle.uid
+      return { uid, ...detail.result.properties, id: detail.result._id };
     })
   );
   return details;
