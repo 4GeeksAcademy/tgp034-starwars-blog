@@ -16,7 +16,6 @@ export default function Search() {
       searchPlanets(q).then(data => data.result || []),
       searchVehicles(q).then(data => data.result || [])
     ]);
-    console.log('Search results:', res.flat());
     return res.flat();
   }
 
@@ -28,7 +27,7 @@ export default function Search() {
     }
     timeoutRef.current = setTimeout(() => {
       search(query).then(setResults);
-    }, 500);
+    }, 300);
     return () => clearTimeout(timeoutRef.current);
   }, [query]);
 

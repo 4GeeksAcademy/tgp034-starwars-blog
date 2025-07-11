@@ -1,32 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useStarWarsStore } from "../hooks/useStarWarsStore";
+import { capitalizeFirst } from "../utils/textFormatters";
+import { useFavorites } from "../hooks/useFavorites";
 export const ConditionalCard = ({ cardType, item }) => {
 
     const navigate = useNavigate();
-
-    function capitalizeFirst(str = "") {
-        if (str === "n/a") return "N/A";
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    /*
-    const context = useStarWarsStore();
-    const favorites = context.state.favorites;
-    const dispatch = context.dispatch;
-    */
-    const { state: { favorites }, dispatch } = useStarWarsStore();
-    
+    const { favorites, addFavorite, removeFavorite } = useFavorites();
+    const isFavorite = favorites.some(f => f.id === item.id);
     const handleClick = () => {
-        navigate('/details/' + item.name, {state: { item } });
-    }
-
-    const addFavorite = () => {
-        if (favorites.some(f => f.id === item.id)) {
-            dispatch({ type: "REMOVE_FAVORITE", payload: item });
-        } else {
-            dispatch({ type: "ADD_FAVORITE", payload: item });
-        };
+        navigate('/details/' + item.name, { state: { item } });
     }
 
     return (
@@ -54,7 +35,10 @@ export const ConditionalCard = ({ cardType, item }) => {
                 ))}
                 <div className="d-flex align-items-center justify-content-between">
                     <button className="btn btn-outline-primary" onClick={handleClick}>Learn more</button>
-                    <button className={favorites.some(f => f.id === item.id) ? "btn btn-warning" :"btn btn-outline-warning"} onClick={addFavorite}><i className="fa-regular fa-heart"></i></button>
+                    <button className={isFavorite ? "btn btn-warning" : "btn btn-outline-warning"}
+                        onClick={() => isFavorite ? removeFavorite(item) : addFavorite(item)}>
+                        <i className="fa-regular fa-heart"></i>
+                    </button>
                 </div>
             </div>
         </div>

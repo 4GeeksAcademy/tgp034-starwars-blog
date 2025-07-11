@@ -1,72 +1,63 @@
-import React, { createContext, useReducer, useContext, useEffect } from "react"
-import starWarsReducer, { initialStarWarsState } from "../starWarsStore"
+import { createContext, useReducer, useContext, useEffect, useCallback } from "react"
+import starWarsReducer, { initialStarWarsStore } from "../starWarsStore"
 import { getAllPeople, getAllPlanets, getAllVehicles } from "../api/StarWarsApi"
-const StarWarsContext = createContext(null)
-const STORAGE_KEY = "starWarsData"
+
+const StarWarsContext = createContext();
 
 export function StarWarsProvider({ children }) {
-  const [state, dispatch] = useReducer(starWarsReducer, initialStarWarsState())
 
-  // Opcional: centralizar las peticiones
+  const STORAGE_KEY = "starWarsData";
+  const [state, dispatch] = useReducer(starWarsReducer, initialStarWarsStore());
+
+  const loadAll = useCallback(async () => {
+    console.log("Cargando datos desde la API...");
+    try {
+      const [chars, planets, vehicles] = await Promise.all([
+        getAllPeople(),
+        getAllPlanets(),
+        getAllVehicles()
+      ]);
+
+      dispatch({ type: "LOAD_CHARACTERS", payload: chars });
+      dispatch({ type: "LOAD_PLANETS", payload: planets });
+      dispatch({ type: "LOAD_VEHICLES", payload: vehicles });
+      dispatch({ type: "LOAD_FAVORITES", payload: [] });
+
+    } catch (error) {
+      console.error("Error al cargar los datos:", error);
+    }
+  }, [dispatch]);
+
   useEffect(() => {
     const cached = localStorage.getItem(STORAGE_KEY);
     if (cached) {
       console.log("Cargando datos desde el almacenamiento local...");
       const { characters, planets, vehicles, favorites } = JSON.parse(cached);
-      if (characters.length === 0 || planets.length === 0 || vehicles.length === 0) {
-        console.log("Datos incompletos en el almacenamiento local, cargando desde la API...");
-        loadAll();
-      } else {
+      if (characters && characters.length > 0 &&
+        planets && planets.length > 0 &&
+        vehicles && vehicles.length > 0) {
         console.log("Datos cargados desde el almacenamiento local:", { characters, planets, vehicles, favorites });
         dispatch({ type: "LOAD_CHARACTERS", payload: characters });
         dispatch({ type: "LOAD_PLANETS", payload: planets });
         dispatch({ type: "LOAD_VEHICLES", payload: vehicles });
         dispatch({ type: "LOAD_FAVORITES", payload: favorites });
         return;
+      } else {
+        console.warn("Datos incompletos en el almacenamiento local, recargando desde la API...");
+        loadAll();
+        return;
       }
+    } else {
+      console.warn("No hay datos en el almacenamiento local, cargando desde la API...");
+      loadAll();
     }
 
-    async function loadAll() {
-      console.log("Cargando datos desde la API...");
-      const [charsRes, planetsRes, vehiclesRes] = await Promise.all([
-        getAllPeople(),
-        getAllPlanets(),
-        getAllVehicles()
-      ])
+  }, [loadAll])
 
-      const chars = await Promise.all(
-        charsRes.results.map(async char => {
-          const details = await fetch(char.url).then(r => r.json())
-          return { ...details.result.properties, id: details.result._id }
-        })
-      )
-
-      const planets = await Promise.all(
-        planetsRes.map(async planet => {
-          const details = await fetch(planet.url).then(r => r.json())
-          return { ...details.result.properties, id: details.result._id }
-        })
-      )
-
-      const vehicles = await Promise.all(
-        vehiclesRes.map(async vehicle => {
-          const details = await fetch(vehicle.url).then(r => r.json())
-          return { ...details.result.properties, id: details.result._id }
-        })
-      )
-
-      dispatch({ type: "LOAD_CHARACTERS", payload: chars })
-      dispatch({ type: "LOAD_PLANETS", payload: planets })
-      dispatch({ type: "LOAD_VEHICLES", payload: vehicles })
-      dispatch({ type: "LOAD_FAVORITES", payload: [] })
-
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ characters: chars, planets: planets, vehicles: vehicles, favorites: [] }))
+ useEffect(() => {
+    if (state.characters.length > 0 || state.planets.length > 0 || state.vehicles.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
-
-  }, [dispatch])
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
   return (

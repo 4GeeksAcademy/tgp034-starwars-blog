@@ -1,11 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useStarWarsStore } from "../hooks/useStarWarsStore";
+import { capitalizeFirst } from "../utils/textFormatters";
+
 export const Details = () => {
 
-  function capitalizeFirst(str = "") {
-    if (str == "n/a") return "N/A";
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
   const { state: { favorites }, dispatch } = useStarWarsStore();
   const { state: location } = useLocation();
   const navigate = useNavigate();
@@ -18,10 +16,7 @@ export const Details = () => {
     };
   }
 
-  // Recuperamos el item pasado en el estado de navegación
   const item = location?.item || location;
-  console.log(item)
-  // Si no hay item en state, volvemos atrás
   if (!item) {
     console.warn("No item found in state, navigating home.");
     navigate("/");
@@ -39,8 +34,6 @@ export const Details = () => {
   } else {
     resourceType = "unknown";
   }
-
-
 
   return (
     <div className="container-fluid p-5">
@@ -101,8 +94,8 @@ export const Details = () => {
           ) || resourceType === "vehicle" && (
             <>
               <div className="text-center d-flex flex-column align-items-center justify-content-center p-3 gap-3">
-                <b>Model</b>
-                <p>{capitalizeFirst(item.model)}</p>
+                <b>Passengers</b>
+                <p>{capitalizeFirst(item.passengers)}</p>
               </div>
               <div className="text-center d-flex flex-column align-items-center justify-content-center p-3 gap-3">
                 <b>Cost in credits</b>

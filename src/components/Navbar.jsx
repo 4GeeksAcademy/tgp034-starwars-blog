@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import starwars50 from "../assets/img/starwars50.svg";
-import { useStarWarsStore } from "../hooks/useStarWarsStore.jsx";
-import { useNavigate } from "react-router-dom";
+import { useFavorites } from "../hooks/useFavorites";
 import Search from "./Search.jsx";
 export const Navbar = () => {
 
-	const { state: { favorites }, dispatch } = useStarWarsStore();
+	const { favorites, removeFavorite } = useFavorites();
 	const navigate = useNavigate();
 
 	return (
@@ -26,7 +25,6 @@ export const Navbar = () => {
 							<span className="px-2 ms-1 bg-secondary rounded-1">{favorites.length}</span>
 						</a>
 						<ul className="dropdown-menu">
-							{console.log(favorites)}
 							{favorites.length > 0 ? (
 								favorites.map((item) => (
 									<li className="d-flex" key={item._id + item.name}>
@@ -38,8 +36,7 @@ export const Navbar = () => {
 										<button className="btn">
 											<i className="fa-regular fa-trash-can "
 												onClick={() => {
-													console.log("Removing favorite:", item);
-													dispatch({ type: "REMOVE_FAVORITE", payload: item });
+													removeFavorite(item);
 												}}></i>
 										</button>
 									</li>

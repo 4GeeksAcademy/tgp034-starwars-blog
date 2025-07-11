@@ -13,7 +13,14 @@ async function fetchResource(path) {
 }
 
 export async function getAllPeople() {
-  return fetchResource('/people');
+  const people = await fetchResource('/people');
+  const details = await Promise.all(
+    people.results.map(async person => {
+      const detail = await fetch(person.url).then(r => r.json());
+      return { ...detail.result.properties, id: detail.result._id };
+    })
+  );
+  return details;
 }
 
 export async function getPersonById(id) {
@@ -25,7 +32,14 @@ export async function searchPeople(name) {
 }
 
 export async function getAllPlanets() {
-  return fetchResource('/planets');
+  const planets = await fetchResource('/planets');
+  const details = await Promise.all(
+    planets.results.map(async planet => {
+      const detail = await fetch(planet.url).then(r => r.json());
+      return { ...detail.result.properties, id: detail.result._id };
+    })
+  );
+  return details;
 }
 
 export async function getPlanetById(id) {
@@ -37,7 +51,14 @@ export async function searchPlanets(name) {
 }
 
 export async function getAllVehicles() {
-  return fetchResource('/vehicles');
+  const vehicles = await fetchResource('/vehicles');
+  const details = await Promise.all(
+    vehicles.results.map(async vehicle => {
+      const detail = await fetch(vehicle.url).then(r => r.json());
+      return { ...detail.result.properties, id: detail.result._id };
+    })
+  );
+  return details;
 }
 
 export async function getVehicleById(id) {

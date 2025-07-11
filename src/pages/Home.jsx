@@ -2,9 +2,7 @@ import { useStarWarsStore } from "../hooks/useStarWarsStore.jsx";
 import { ConditionalCard } from "../components/ConditionalCard.jsx";
 export const Home = () => {
 
-	const {
-		state: { characters, planets, vehicles },
-	} = useStarWarsStore();
+	const {state: { characters, planets, vehicles }} = useStarWarsStore();
 
 	const isLoading =
 		characters.length === 0 ||

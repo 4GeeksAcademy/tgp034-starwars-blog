@@ -1,4 +1,4 @@
-export function initialStarWarsState() {
+export function initialStarWarsStore() {
   return {
     characters: [],   
     planets: [],     
