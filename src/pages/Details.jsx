@@ -1,20 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useStarWarsStore } from "../hooks/useStarWarsStore";
 import { capitalizeFirst } from "../utils/textFormatters";
+import { useFavorites } from "../hooks/useFavorites";
 
 export const Details = () => {
 
-  const { state: { favorites }, dispatch } = useStarWarsStore();
   const { state: location } = useLocation();
   const navigate = useNavigate();
-
-  const addFavorite = () => {
-    if (favorites.some(f => f.id === item.id)) {
-      dispatch({ type: "REMOVE_FAVORITE", payload: item });
-    } else {
-      dispatch({ type: "ADD_FAVORITE", payload: item });
-    };
-  }
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
 
   const item = location?.item;
   if (!item) {
@@ -23,6 +15,8 @@ export const Details = () => {
     return null;
   }
   console.log("Item details:", item);
+
+  const isFavorite = favorites.some(f => f.id === item.id);
 
   let resourceType;
   let imgType;
@@ -36,7 +30,7 @@ export const Details = () => {
     resourceType = "vehicle";
     imgType = "vehicles";
   }
- 
+
   const imgUrl = "https://raw.githubusercontent.com/breatheco-de/swapi-images/refs/heads/master/public/images/" + imgType + "/" + item.uid + ".jpg";
   console.log("Image URL:", imgUrl);
 
@@ -49,7 +43,10 @@ export const Details = () => {
         <div className="text-center w-50 d-flex flex-column align-items-center justify-content-center p-3">
           <div className="d-flex w-100 justify-content-evenly align-items-center">
             <h1>{item.name}</h1>
-            <button className={favorites.some(f => f.id === item.id) ? "btn btn-warning" : "btn btn-outline-warning"} onClick={addFavorite}><i className="fa-regular fa-heart"></i></button>
+            <button className={isFavorite ? "btn btn-warning" : "btn btn-outline-warning"}
+              onClick={() => isFavorite ? removeFavorite(item) : addFavorite(item)}>
+              <i className="fa-regular fa-heart"></i>
+            </button>
           </div>
           <p>Fusce auctor libero nulla, eu tincidunt velit imperdiet sit amet. Aenean quis lorem vitae mi congue imperdiet eu eu purus. Etiam maximus ipsum sit amet mauris sagittis, vel tempus est pulvinar. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer eu viverra tortor, eget porta lorem. Vivamus eu nisi sollicitudin odio porta pharetra non a sem. </p>
         </div>

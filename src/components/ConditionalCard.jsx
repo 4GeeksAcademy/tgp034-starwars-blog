@@ -14,7 +14,7 @@ export const ConditionalCard = ({ cardType, item }) => {
     
     return (
         <div className="border border-1 rounded-2 m-2" style={{ width: "401px" }}>
-            <img className="rounded-top-2 w-100" style={{}} src={imgUrl} alt="Img not available" />
+            <img className="rounded-top-2 w-100" src={imgUrl} alt="Img not available" />
             <div className="p-4 w-100">
                 <h4>{item.name}</h4>
                 {(cardType === "character" && (
@@ -30,7 +30,6 @@ export const ConditionalCard = ({ cardType, item }) => {
                     </>
                 )) || (cardType === "planet" && (
                     <>
-
                         <p>Population: {capitalizeFirst(item.population)}<br />
                             Terrain: {capitalizeFirst(item.terrain)}</p>
                     </>

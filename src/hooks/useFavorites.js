@@ -14,7 +14,6 @@ export function useFavorites() {
         dispatch({ type: 'REMOVE_FAVORITE', payload: item });
     };
 
-    // Devuelve las funciones y el estado que los componentes necesitarán
     return {
         favorites,
         addFavorite,
