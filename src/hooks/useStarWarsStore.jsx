@@ -51,7 +51,6 @@ export function StarWarsProvider({ children }) {
       console.warn("No hay datos en el almacenamiento local, cargando desde la API...");
       loadAll();
     }
-
   }, [loadAll])
 
  useEffect(() => {

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { capitalizeFirst } from "../utils/textFormatters";
 import { useFavorites } from "../hooks/useFavorites";
-export const ConditionalCard = ({ cardType, item }) => {
 
+export const ConditionalCard = ({ cardType, item }) => {
     const navigate = useNavigate();
     const { favorites, addFavorite, removeFavorite } = useFavorites();
     const isFavorite = favorites.some(f => f.id === item.id);
@@ -11,7 +11,7 @@ export const ConditionalCard = ({ cardType, item }) => {
     }
     const imgType = cardType === "character" ? "people" : cardType === "vehicle" ? "vehicles" : "planets";
     const imgUrl = "https://raw.githubusercontent.com/breatheco-de/swapi-images/refs/heads/master/public/images/"+ imgType + "/" + item.uid + ".jpg";
-    console.log(imgUrl);
+    
     return (
         <div className="border border-1 rounded-2 m-2" style={{ width: "401px" }}>
             <img className="rounded-top-2 w-100" style={{}} src={imgUrl} alt="Img not available" />

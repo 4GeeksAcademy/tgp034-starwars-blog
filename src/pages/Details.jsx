@@ -16,38 +16,35 @@ export const Details = () => {
     };
   }
 
-  const item = location?.item || location;
+  const item = location?.item;
   if (!item) {
     console.warn("No item found in state, navigating home.");
     navigate("/");
     return null;
   }
+  console.log("Item details:", item);
 
-  // Inferir el tipo de recurso a partir de una propiedad única
   let resourceType;
+  let imgType;
   if ("gender" in item) {
     resourceType = "character";
+    imgType = "people";
   } else if ("terrain" in item) {
     resourceType = "planet";
+    imgType = "planets";
   } else if ("passengers" in item) {
     resourceType = "vehicle";
-  }
-  
-  let imgType;
-  if(resourceType === "character") {
-    imgType = "characters";
-  } else if(resourceType === "planet") {
-    imgType = "planets";
-  } else if(resourceType === "vehicle") {
     imgType = "vehicles";
-  } 
+  }
+ 
   const imgUrl = "https://raw.githubusercontent.com/breatheco-de/swapi-images/refs/heads/master/public/images/" + imgType + "/" + item.uid + ".jpg";
+  console.log("Image URL:", imgUrl);
 
   return (
-    <div className="container-fluid p-5">
+    <div className="container-fluid p-4">
       <div className="d-flex align-items-center gap-3">
         <div className="container w-50 justify-content-center d-flex">
-          <img className="w-100" style={{ maxWidth: "500px" }} src={imgUrl} alt="" />
+          <img className="img-fluid w-100" style={{ maxHeight: "600px", objectFit: "contain" }} src={imgUrl} alt="Imagen no disponible" />
         </div>
         <div className="text-center w-50 d-flex flex-column align-items-center justify-content-center p-3">
           <div className="d-flex w-100 justify-content-evenly align-items-center">
@@ -57,7 +54,7 @@ export const Details = () => {
           <p>Fusce auctor libero nulla, eu tincidunt velit imperdiet sit amet. Aenean quis lorem vitae mi congue imperdiet eu eu purus. Etiam maximus ipsum sit amet mauris sagittis, vel tempus est pulvinar. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer eu viverra tortor, eget porta lorem. Vivamus eu nisi sollicitudin odio porta pharetra non a sem. </p>
         </div>
       </div>
-      <div className="d-flex border-top border-danger mt-3 text-danger justify-content-evenly">
+      <div className="d-flex border-top border-danger mt-5 text-danger justify-content-evenly">
         <div className="text-center d-flex flex-column align-items-center justify-content-center p-3 gap-3">
           <b>Name</b>
           <p>{item.name}</p>

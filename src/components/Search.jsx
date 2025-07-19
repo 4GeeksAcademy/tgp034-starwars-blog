@@ -25,6 +25,7 @@ export default function Search() {
       setResults([]);
       return;
     }
+
     timeoutRef.current = setTimeout(() => {
       search(query).then(setResults);
     }, 300);
@@ -35,6 +36,7 @@ export default function Search() {
     setResults([]);
     setQuery('');
   }, [useLocation().pathname]);
+
 
   return (
     <div className="position-relative w-100" style={{ minWidth: 250 }}>
@@ -56,7 +58,15 @@ export default function Search() {
               className="list-group-item list-group-item-action"
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                navigate(`/details/${item.properties.name}`, { state: item.properties });
+                navigate(`/details/${item.properties.name}`, {
+                  state: {
+                    item: {
+                      uid: item.uid,
+                      ...item.properties,
+                      id: item._id
+                    }
+                  }
+                });
                 setQuery('');
                 setResults([]);
               }}
